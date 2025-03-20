@@ -1,75 +1,105 @@
+savat=[]
+buyurtmalar=[]
+class Dish:
+    dishes = []
 
-ochiril_talabalar = []
-qidirilgan=[]
-while True:
+    def __init__(self, nomi, tavsifi, narxi):
+        self.nomi = nomi
+        self.tavsifi = tavsifi
+        self.narxi = narxi
 
-    print("\n🎓 Talabalar Boshqaruv Tizimi")
-    print("1. Barcha talabalarni ko‘rish")
-    print("2. Yangi talaba qo‘shish")
-    print("3. Talabani qidirish")
-    print("4. Bahoni yangilash")
-    print("5. Talabani o‘chirish")
-    print("6. Chiqish")
-    tanlov = int(input("Tanlang (1-6): "))
-    if tanlov == 1:
-        try:
-            with open("talabalar.txt", "r") as file:
-                talabalar = file.readlines()
-                if talabalar:
-                    print("\n📋 Barcha talabalar:")
-                    for talaba in talabalar:
-                        print(talaba)
-                else:
-                    print("📂 Hozircha talabalar yo‘q.")
+    def jami(self):
+        return Dish.dishes.append(self)
 
-        except Exception as e:
-            print(f"{e}da xatolik!!!")
+    @classmethod
+    def show_products(cls, nom):
+          savat = []
+          for dish in Dish.dishes:
+              if dish.nom == nom:
+                  savat.append(dish)
 
-    if tanlov == 2:
-        try:
-            id=int(input('Talabaga id kiriting: '))
-            ism = input("Talabani ismini kiriting: ").title()
-            fan= input(f"{ism} o'qiydigan fanni kiriting: ").lower()
-            baho= int(input(f"{ism}ni bahosini kiriting: "))
-            with open("talabalar.txt", "a")as file:
-                file.write(f"\n{id}. {ism},fan: {fan}, bahosi: {baho}")
-                print(f"{ism} ismli talaba qo'shildi")
+          return savat
 
 
-        except Exception as e:
-            print(f"{e}da xatolik!!!")
+class Ochirish:
+    def __init__(self,ochiradigon):
+        self.ochiradigon=ochiradigon
+    def ochirgan(self):
+        return  ochirilash
 
-    if tanlov==3:
-        try:
-            u=int(input("Izlayotgan talabani id sini kiriting: "))
-            with open("talabalar.txt","r") as file:
-                talabalar=file.readlines()
-            for talaba in talabalar:
-                if talaba.startswith(f"{u}"):
-                    qidirilgan.append(talaba[1])
-                    print(talaba)
-        except Exception as w:
-            print(f"{w}da xatolik!!!")
 
-    if tanlov==5:
-        ochir=int(input("Jadvaldan o'chiriladigon talabani idsini kiriting: "))
-        with open("talabalar.txt","r")as file:
-            talabalar = file.readlines()
-        topildi = False
+class Menu(Dish):
+    def __init__(self,nomi, tavsifi, narxi):
+        Dish.show_products(dish)
+        super().__init__(nomi,tavsifi,narxi)
 
-        for talaba in talabalar:
-            if talaba.startswith(f"{ochir}."):
-                topildi = True
-            else:
-                ochiril_talabalar.append(talaba)
 
-        if topildi:
-            with open("talabalar.txt", "w") as file:
-                file.writelines(ochiril_talabalar)
-            print(f"{ochir} IDli talaba o‘chirildi!")
+    @classmethod
+    def show_menu(cls):
+        if savat=='':
+            print("Menyu bo'sh!")
         else:
-            print(" Bunday IDli talaba topilmadi!")
-    if tanlov==6:
-        print(f"{qidirilgan} qidirildi")
-        print(f"{ochiril_talabalar} jadvaldan ochirildi")
+            print("=== Menyu ===")
+            for dish in cls.dishes:
+                print(f"Taom: {dish.nomi}, Tavsif: {dish.tavsifi}, Narx: {dish.narxi} so'm")
+
+
+class Buyurtma(Dish):
+    def __init__(self,nomi,tavsifi,narxi):
+        Dish.show_products(dish)
+        super().__init__(nomi,tavsifi,narxi)
+    def buyurtmacha(self):
+        return buyurtmalar
+
+
+while True:
+    print("\n1. yangi taom qo'shish")
+    print("2. taomni o'chirish")
+    print("3. menyuni ko'rish ")
+    print("4. buyurtma qilish")
+    print("5. dasturdan chiqish")
+
+    tanlov = int(input('Tanlov kiriting(1-5): '))
+    if tanlov == 1:
+        nomi = input("yangi taom nomini kiriting: ")
+        tavsifi = input(f"{nomi}ni tavsifini kiriting: ")
+        narxi = int(input(f"{nomi}ni narxini kiriting:"))
+        dish=(nomi,tavsifi,narxi)
+        # Dish(nomi, tavsifi, narxi)
+
+        new_dish = Dish(nomi, tavsifi, narxi)
+        new_dish.show_products(nomi)
+        savat.append(nomi)
+        print(f"{nomi} taomi muvaffaqiyatli qo'shildi.")
+
+    if tanlov==2:
+        # Dish.show_products(dish)
+        ochirilash = input("qaysi taomni o'chirmoqchisiz?")
+        if not ochirilash in savat:
+            print("bunday taom menyuda yo'q !")
+        else:
+            savat.remove(ochirilash)
+            print(f"menyuda {ochirilash} o'chirildi")
+
+    elif tanlov==3:
+        Menu.show_menu()
+        print(savat)
+        print("jarayon tugadi")
+
+    elif tanlov==4:
+        while True:
+            buyurtma=input("nima buyurtma qilmoqchisiz? ")
+            if not buyurtma in savat:
+                print("bunday taom menyuda yo'q")
+            else:
+                buyurtmalar.append(buyurtma)
+                print(f"sizning buyurtmangiz {buyurtmalar}")
+
+            keyingi=input('yana buyurtma qilmoqchimisiz? ')
+            if keyingi=='ha':
+                continue
+            else:
+                print(f"sizning buyurtmangiz: {buyurtmalar}")
+                break
+    elif tanlov==5:
         break
